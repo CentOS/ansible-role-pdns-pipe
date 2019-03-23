@@ -1,1 +1,71 @@
 # Defaults tasks for role pdns-pipe
+
+- name: Installing required pkgs
+  yum: 
+    name: "{{ pdns_pipe_pkgs }}"
+    state: latest
+
+- import_role: 
+    name: geoip2
+
+- name: Directory structure for custom pipe backend
+  file:
+    path: /var/lib/centos-pdns
+    state: directory
+    mode: 0755
+
+- name: Adding our custom pipe backend script
+  template:
+    src: "{{ item }}.j2"
+    dest: "/var/lib/centos-pdns/{{ item }}"
+    mode: 0755
+  with_items:
+    - backend.py
+    - backend_download
+  notify: 
+    - restart_pdns
+
+- name: Downloading backend (init)
+  command: /var/lib/centos-pdns/backend_download
+  args:
+    creates: /var/lib/centos-pdns/backend.json
+    
+
+- name: Configuring pdns
+  template:
+    src: pdns.conf.j2
+    dest: /etc/pdns/pdns.conf
+  notify:
+    - restart_pdns
+
+- name: Ensuring pdns is enabled
+  service:
+    name: pdns
+    state: started
+    enabled: yes
+
+- name: Configuring iptables rules
+  include_role:
+    name: iptables
+    tasks_from: "{{ item }}"
+  vars:
+    iptables_policy_name: dns-tcp
+    iptables_protocol: tcp
+    iptables_port: "53"
+  with_items:
+    - custom-policy-ipv6
+    - custom-policy
+
+- name: Configuring iptables rules
+  include_role:
+    name: iptables
+    tasks_from: "{{ item }}"
+  vars:
+    iptables_policy_name: dns-udp
+    iptables_protocol: udp
+    iptables_port: "53"
+  with_items:
+    - custom-policy-ipv6
+    - custom-policy
+
+- include_tasks: monitoring.yml

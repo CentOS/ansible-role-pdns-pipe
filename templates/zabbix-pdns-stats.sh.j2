@@ -1,0 +1,4 @@
+#!/bin/bash
+# called by cron job to send pdns statistics to Zabbix
+
+zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k pdns.requests -o $(curl --silent http://localhost:8081|grep "Queries/second"|cut -f 4 -d ','|cut -f 2 -d ':'|tr -d '[:blank:]') >/dev/null

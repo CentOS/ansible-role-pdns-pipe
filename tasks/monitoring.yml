@@ -1,0 +1,24 @@
+- name: Configuring agent in Zabbix server
+  include_role:
+    name: zabbix-server
+    tasks_from: agent_config
+  vars:
+    zabbix_templates: "{{ zabbix_pdns_templates }}"
+    zabbix_groups: "{{ zabbix_pdns_groups }}"
+  delegate_to: "{{ zabbix_api_srv }}"  
+  tags:
+    - monitoring
+  when: zabbix_api_srv is defined
+
+- name: Adding zabbix pdns stats file
+  template:
+    src: zabbix-pdns-stats.sh.j2
+    dest: /usr/lib/zabbix/zabbix-pdns-stats
+    mode: 0750
+
+- name: Ensuring we report pdns stats to zabbix
+  cron:
+    name: pdns zabbix stats
+    job: /usr/lib/zabbix/zabbix-pdns-stats
+    minute: "*/1"
+

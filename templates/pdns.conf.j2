@@ -1,0 +1,11 @@
+setuid=pdns
+setgid=pdns
+launch=pipe 
+pipe-command=/var/lib/centos-pdns/backend.py
+pipe-abi-version=1
+cache-ttl=0
+local-ipv6=::
+query-cache-ttl=0
+webserver=yes
+webserver-address=127.0.0.1
+webserver-port=8081
