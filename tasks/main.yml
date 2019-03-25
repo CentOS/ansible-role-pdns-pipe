@@ -30,7 +30,6 @@
   args:
     creates: /var/lib/centos-pdns/backend.json
     
-
 - name: Configuring pdns
   template:
     src: pdns.conf.j2
@@ -67,5 +66,12 @@
   with_items:
     - custom-policy-ipv6
     - custom-policy
+
+- name: Scheduling pdns backend refresh
+  cron:
+    name: Pdns backend update
+    minute: "*/3"
+    user: root
+    job: /var/lib/centos-pdns/backend_download
 
 - include_tasks: monitoring.yml
