@@ -15,7 +15,7 @@ pdns_servers = ['pdns1', 'pdns2', 'pdns3']
 pdns_ipaddresses = { 'pdns1': '147.75.75.145', 'pdns2': '85.236.43.108', 'pdns3': '67.219.148.138' }
 geodb = geoip2.database.Reader('/usr/share/GeoIP/GeoLite2-City.mmdb')
 soa_ver = datetime.datetime.today().strftime('%Y%m%d%H')
-debug = True
+debug = False
 
 def continent_mapping(country_code):
   """ This function will return the continent for the country given in arg - see http://dev.maxmind.com/geoip/legacy/codes/country_continent/ """
