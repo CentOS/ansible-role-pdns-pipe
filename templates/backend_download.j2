@@ -27,6 +27,7 @@ function f_errorcheck() {
    f_log "$* : PASS => continuing ..."
  else
    f_log "$* : FAIL => exiting ..."
+   zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k pdns.backend_refresh -o 1 >/dev/null
    exit 1
  fi
 }
@@ -55,3 +56,5 @@ else
   echo "${new_checksum}" > ${local_checksum_file}   
 fi
 
+# No error detected and pdns restarted to informing zabbix
+zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k pdns.backend_refresh -o 0 >/dev/null
