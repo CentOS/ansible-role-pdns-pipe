@@ -35,13 +35,13 @@
     - selinux
 
 - name: Directory structure for custom pipe backend
-  file:
+  ansible.builtin.file:
     path: /var/lib/centos-pdns
     state: directory
     mode: 0755
 
 - name: Adding our custom pipe backend script
-  template:
+  ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "/var/lib/centos-pdns/{{ item }}"
     mode: 0755
@@ -52,25 +52,25 @@
     - restart_pdns
 
 - name: Downloading backend (init)
-  command: /var/lib/centos-pdns/backend_download
+  ansible.builtin.command: /var/lib/centos-pdns/backend_download
   args:
     creates: /var/lib/centos-pdns/backend.json
     
 - name: Configuring pdns
-  template:
+  ansible.builtin.template:
     src: pdns.conf.j2
     dest: /etc/pdns/pdns.conf
   notify:
     - restart_pdns
 
 - name: Ensuring pdns is enabled
-  service:
+  ansible.builtin.service:
     name: pdns
     state: started
     enabled: yes
 
 - name: Configuring iptables rules
-  include_role:
+  ansible.builtin.include_role:
     name: iptables
     tasks_from: "{{ item }}"
   vars:
@@ -82,7 +82,7 @@
     - custom-policy
 
 - name: Configuring iptables rules
-  include_role:
+  ansible.builtin.include_role:
     name: iptables
     tasks_from: "{{ item }}"
   vars:
@@ -94,7 +94,7 @@
     - custom-policy
 
 - name: Scheduling pdns backend refresh
-  cron:
+  ansible.builtin.cron:
     name: Pdns backend update
     minute: "*/3"
     user: root

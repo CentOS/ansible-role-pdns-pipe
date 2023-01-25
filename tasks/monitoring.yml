@@ -1,6 +1,6 @@
 - block:
     - name: Configuring agent in Zabbix server
-      include_role:
+      ansible.builtin.include_role:
         name: zabbix-server
         tasks_from: agent_config
       vars:
@@ -12,13 +12,13 @@
   when: zabbix_api_srv is defined
 
 - name: Adding zabbix pdns stats file
-  template:
+  ansible.builtin.template:
     src: zabbix-pdns-stats.sh.j2
     dest: /usr/lib/zabbix/zabbix-pdns-stats
     mode: 0750
 
 - name: Ensuring we report pdns stats to zabbix
-  cron:
+  ansible.builtin.cron:
     name: pdns zabbix stats
     job: /usr/lib/zabbix/zabbix-pdns-stats
     minute: "*/1"
