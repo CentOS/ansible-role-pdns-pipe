@@ -1,0 +1,5 @@
+pdns_pipe_pkgs:
+  - pdns
+  - pdns-backend-pipe
+  - python2-geoip2
+

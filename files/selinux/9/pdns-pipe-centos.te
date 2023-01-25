@@ -1,0 +1,16 @@
+
+module pdns-pipe-centos 1.0;
+
+require {
+	type bin_t;
+	type pdns_t;
+	type var_lib_t;
+	class file { execute execute_no_trans getattr ioctl map open read };
+}
+
+#============= pdns_t ==============
+allow pdns_t bin_t:file execute;
+
+#!!!! This avc can be allowed using the boolean 'domain_can_mmap_files'
+allow pdns_t bin_t:file map;
+allow pdns_t var_lib_t:file { execute execute_no_trans getattr ioctl open read };

@@ -1,11 +1,5 @@
 # Defaults variables for role pdns-pipe
 
-# Needed pkgs to be installed
-pdns_pipe_pkgs:
-  - pdns
-  - pdns-backend-pipe
-  - python2-geoip2
-
 # Symmetric gpg passphrase needed to decrypt the gpg file
 pdns_gpg_passphrase: well...
 # Url to the .json.gpg encrypted backend file

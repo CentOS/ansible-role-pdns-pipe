@@ -4,7 +4,11 @@ launch=pipe
 pipe-command=/var/lib/centos-pdns/backend.py
 pipe-abi-version=1
 cache-ttl=0
+{% if ansible_distribution_major_version|int < 8 %}
 local-ipv6=::
+{% else %}
+zone-cache-refresh-interval=0
+{% endif %}
 query-cache-ttl=0
 webserver=yes
 webserver-address=127.0.0.1

@@ -1,5 +1,14 @@
 # Defaults tasks for role pdns-pipe
 
+- name: Importing specific distro variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+  tags:
+    - vars
+    - always
+
 - name: Installing required pkgs
   yum: 
     name: "{{ pdns_pipe_pkgs }}"
@@ -7,6 +16,23 @@
 
 - import_role: 
     name: geoip2
+
+- block:
+    - name: Distributing custom selinux policies
+      copy: 
+        src: "selinux/{{ ansible_distribution_version[0] }}/{{ item }}" 
+        dest: "/etc/selinux/centos/{{ item }}"
+      register: sepolicy
+      with_items:
+        - pdns-pipe-centos.pp
+
+    - name: reload custom selinux files
+      shell: /usr/sbin/semodule -u "/etc/selinux/centos/pdns-pipe-centos.pp"
+      when: ansible_selinux.status == "enabled" and sepolicy.changed
+      
+  when: "ansible_distribution_version[0]| int > 8"
+  tags:
+    - selinux
 
 - name: Directory structure for custom pipe backend
   file:

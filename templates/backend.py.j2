@@ -1,4 +1,8 @@
+{% if ansible_distribution_major_version|int < 8 %}
 #!/usr/bin/python -u
+{% else %}
+#!/usr/bin/python3 -u
+{% endif %}
 
 from sys import stdin, stdout, stderr
 import os
