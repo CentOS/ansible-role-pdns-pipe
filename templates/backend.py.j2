@@ -15,8 +15,8 @@ import datetime
 backend_json = '/var/lib/centos-pdns/backend.json'
 default_ttl = '60'
 auth_zone = 'centos.org'
-pdns_servers = ['pdns1', 'pdns2', 'pdns3']
-pdns_ipaddresses = { 'pdns1': '147.75.75.145', 'pdns2': '85.236.43.108', 'pdns3': '67.219.148.138' }
+pdns_servers = [{% for host in pdns_hosts -%} '{{ host.name }}' {%- if not loop.last -%},{% endif %} {% endfor %}]
+pdns_ipaddresses = { {% for host in pdns_hosts -%} '{{ host.name }}': '{{ host.ip }}' {%- if not loop.last -%},{% endif %} {% endfor %} }
 geodb = geoip2.database.Reader('/usr/share/GeoIP/GeoLite2-City.mmdb')
 soa_ver = datetime.datetime.today().strftime('%Y%m%d%H')
 debug = False

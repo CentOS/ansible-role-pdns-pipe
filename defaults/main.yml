@@ -1,5 +1,12 @@
 # Defaults variables for role pdns-pipe
 
+# some NS records for SOA answers
+pdns_hosts:
+  - name: pdns1
+    ip: 192.168.1.1
+  - name: pdns2
+    ip: 192.168.1.2
+
 # Symmetric gpg passphrase needed to decrypt the gpg file
 pdns_gpg_passphrase: well...
 # Url to the .json.gpg encrypted backend file

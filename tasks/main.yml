@@ -50,6 +50,8 @@
     - backend_download
   notify: 
     - restart_pdns
+  tags:
+    - backend
 
 - name: Downloading backend (init)
   ansible.builtin.command: /var/lib/centos-pdns/backend_download
