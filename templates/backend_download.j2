@@ -37,7 +37,11 @@ curl --silent --fail -H 'Cache-Control: no-cache' ${remote_checksum_file} -o ${n
 
 f_errorcheck "Downloading ${remote_checksum_file}"
 
-previous_checksum=$(awk '{print $1}' ${local_checksum_file})
+if [ -e ${local_checksum_file} ] ; then
+  previous_checksum=$(awk '{print $1}' ${local_checksum_file})
+else
+  previous_checksum="00000000000000"
+fi
 new_checksum=$(awk '{print $1}' ${new_checksum_file})
 
 if [ "${new_checksum}" == "${previous_checksum}" ] ; then
